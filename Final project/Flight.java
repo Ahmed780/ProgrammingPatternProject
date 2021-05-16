@@ -1,4 +1,4 @@
-package progproject;
+package Progproject;
 
 import java.sql.*;
 import java.sql.Date;
@@ -7,7 +7,7 @@ import java.util.*;
 
 /**
  *
- * @author Uzair Lakhani, Mohamed Mohamed Vall
+ * @author Uzair Lakhani, Muhammad Val
  */
 public class Flight {
 
@@ -19,6 +19,7 @@ public class Flight {
     private int seats;
     private boolean available;
     private double amount;
+    private static Connection con = DBConnection.getInstance();
 
     public Flight(String flightN, String name, String origin, String dest, double duration, int seats, double amount) {
         this.flightN = flightN;
@@ -29,12 +30,12 @@ public class Flight {
         this.seats = seats;
         this.amount = amount;
     }
-     public Flight() {
+
+    public Flight() {
     }
-     
+
     public boolean addFlight(Flight flight) {
-        try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()) {
+        try (Statement stmt = con.createStatement()) {
             String createTable = "INSERT INTO Flights (flightN, name, origin, dest, "
                     + "duration, seats, available, amount) " + "VALUES (" + flight.flightN + ", '" + flight.name + "',' "
                     + flight.origin + "',' " + flight.dest + "',' "
@@ -50,8 +51,7 @@ public class Flight {
     }
 
     public boolean removerFlight(String flightN) {
-        try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()) {
+        try (Statement stmt = con.createStatement()) {
             String createTable = "delete from Flights where flightN =" + flightN + ";";
             stmt.execute(createTable);
             return true;
@@ -62,11 +62,11 @@ public class Flight {
 
         return false;
     }
-      public static Map<String, String> viewBoard() {
+
+    public static Map<String, String> viewBoard() {
         Map<String, String> map = new HashMap();
 
-        try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()) {
+        try (Statement stmt = con.createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT * FROM Flights;");
 
             while (rs.next()) {
@@ -91,8 +91,7 @@ public class Flight {
     }
 
     public boolean updateFlightData(String flightN, String field, String newValue) {
-        try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()) {
+        try (Statement stmt = con.createStatement()) {
             String sql = "UPDATE Flights SET " + field + "= " + "'" + newValue + "'"
                     + " where flightN = " + flightN + ";";
             stmt.execute(sql);
@@ -102,6 +101,31 @@ public class Flight {
             System.exit(0);
         }
         return false;
+    }
+    public static Map<String, String> viewBookedFlights() {
+        Map<String, String> map = new HashMap();
+
+        try (Statement stmt = con.createStatement()) {
+            ResultSet rs = stmt.executeQuery("SELECT * FROM RESERVEDFLIGHTS;");
+
+            while (rs.next()) {
+                String flightN = rs.getString("FLIGHTN");
+                String passNum = rs.getString("PASSNUM");
+                String flName = rs.getString("FLNAME");
+                int issueDate = rs.getInt("ISSUEDATE");
+                int contact = rs.getInt("CONTACT");
+                int amount = rs.getInt("AMOUNT");
+
+                map.put(rs.getString("TICKETN"), " FLIGHTN: " + flightN
+                        + ", PASSNUM: " + passNum + ", FLNAME: " + flName
+                        + ", ISSUEDATE: " + issueDate + ", CONTACT: " + contact
+                        + ", AMOUNT: " + amount + "\n");
+            }
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        return map;
     }
 
     public String getFlightN() {
