@@ -60,22 +60,22 @@ public class UseFlight {
                 + "Amount    INT)";
 
         String clientTable = "CREATE TABLE Clients "
-                + " (FLname                TEXT NOT NULL,"
-                + "Passnum int PRIMARY KEY     NOT NULL,"
-                + " Contact   INT NOT NULL)";
+                + " (FLname varchar(25) ,"
+                + "PassNum int PRIMARY KEY,"
+                + " Contact INT)";
 
         String reservedTable = "CREATE TABLE reservedFlights "
-                + "(TicketN INT PRIMARY KEY       NOT NULL,"
-                + " FlightN                  TEXT NOT NULL,"
-                + " PassNum                   INT NOT NULL,"
-                + " FLname                   TEXT NOT NULL,"
-                + " IssueDate                DATE NOT NULL,"
-                + " Contact                   INT NOT NULL,"
-                + " Amount                    INT NOT NULL,"
+                + "(ticketN INT PRIMARY KEY,"
+                + " flightN    TEXT NOT NULL,"
+                + " PassNum    INT NOT NULL,"
+                + " FLname     TEXT NOT NULL,"
+                + " IssueDate DATE,"
+                + " Contact INT,"
+                + " Amount INT,"
                 + " CONSTRAINT FK_RESERVE_FLIGHN FOREIGN KEY(FlightN)"
-                + " REFERENCES FLIGHTS(FLIGHTN),"
+                + " REFERENCES Flights(FLIGHTN),"
                 + " CONSTRAINT FK_RESERVE_PASSNUM FOREIGN KEY(PassNum)"
-                + " REFERENCES CLIENTS(PASSNUM))";
+                + " REFERENCES Clients(PassNum))";
  
         controller.createFlightsTable(fligtTable);
         clientController.createClientsTable(clientTable);
