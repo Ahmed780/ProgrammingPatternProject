@@ -1,4 +1,4 @@
-package progproject;
+package Progproject;
 
 import java.sql.*;
 import java.util.*;
@@ -11,6 +11,7 @@ public class FlightController {
     
     private List<Flight> model;
     private FlightView view;
+      private final Connection con = DBConnection.getInstance();
     
     public FlightController (List<Flight> model, FlightView view) {
         this.model = model;
@@ -18,8 +19,7 @@ public class FlightController {
     }
     
     public void createFlightsTable(String createTable) {
-        try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()){
+        try (Statement stmt = con.createStatement()){
           stmt.executeUpdate("DROP TABLE IF EXISTS Flights;");
             stmt.executeUpdate(createTable); 
         } catch (Exception e) {
@@ -28,9 +28,7 @@ public class FlightController {
         }
     }
       public boolean addFlight(Flight flight) {
-        try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()) {
-           
+        try (Statement stmt = con.createStatement()) {         
             String createTable = "INSERT INTO Flights (flightN, name, origin, dest, "
                     + "duration, seats, available, amount) "
                     + "VALUES (" + flight.getFlightN() + ", '" + flight.getName() + "',' "
@@ -47,8 +45,7 @@ public class FlightController {
         return false;
     }
         public boolean removerFlight(String flightN) {
-          try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()) {           
+          try (Statement stmt = con.createStatement()) {           
             String createTable = "DELETE FROM Flights WHERE flightN= '1001';"+ flightN;
               System.out.println("\ndelete from Flights where flightN");
             stmt.execute(createTable);
@@ -63,8 +60,7 @@ public class FlightController {
         public Map<Integer, String> getAllFlights() {
         Map<Integer, String> map = new HashMap();
 
-        try (Connection con = DBConnection.DbConnector();
-         Statement stmt = con.createStatement()) {
+        try (Statement stmt = con.createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT * from Flights;");
             while (rs.next()) {
                 //int id = rs.getInt("STUDENTID");
@@ -80,8 +76,7 @@ public class FlightController {
     }
             
     public void createClientsTable(String sqlStatement) {
-         try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()){
+         try (Statement stmt = con.createStatement()){
             stmt.executeUpdate("DROP TABLE IF EXISTS Clients;");
             stmt.executeUpdate(sqlStatement); 
         } catch (Exception e) {
@@ -91,16 +86,15 @@ public class FlightController {
     }
     
     public void createReservedFlightsTable(String sqlStatement) {
-         try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()){
+        try (Statement stmt = con.createStatement()) {
             stmt.executeUpdate("DROP TABLE IF EXISTS ReservedFlights;");
-            stmt.executeUpdate(sqlStatement); 
+            stmt.executeUpdate(sqlStatement);
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
     }
-    
+
     public void updateView(Map model) {
         FlightView.printFlightDetails(model);
     }
