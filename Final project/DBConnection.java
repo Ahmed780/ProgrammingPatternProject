@@ -1,4 +1,4 @@
-package progproject;
+package Progproject;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,22 +9,25 @@ import java.sql.DriverManager;
  */
 public class DBConnection {
     
-    /**
-     * This method establishes database connection
-     *
-     * @return database connection
-     */
+private static Connection con;
+    public static Connection getInstance() {
+        if (con == null) {
+            con = DbConnector();
+        }
+        return con;
+    }
+
     public static Connection DbConnector() {
+        String db = "jdbc:sqlite:C:\\Users\\user01\\Downloads\\SQLlite\\db\\Project.db";
+        Connection c = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            Connection c = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\user01\\Downloads\\SQLlite\\db\\client2.db");
-
-            return c;
+            c = DriverManager.getConnection(db);
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
-        return null;
+        return c;
     }
 
 }
