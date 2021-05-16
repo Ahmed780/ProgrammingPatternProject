@@ -7,7 +7,7 @@ import java.util.*;
 
 /**
  *
- * @author Uzair Lakhani, Muhammad Val
+ * @author Uzair Lakhani, Mohamed Mohamed Vall
  */
 public class Flight {
 
