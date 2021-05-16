@@ -1,4 +1,4 @@
-package progproject;
+package Progproject;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -13,13 +13,16 @@ import java.util.*;
 public class Client {
 
     private String fullName;
-    private String passNumber;
-    private String contact;
+    private int passNumber;
+    private int contact;
+     private static Connection con = DBConnection.getInstance();
 
-    public Client(String fullName, String passNumber, String contact) {
+    public Client(String fullName, int passNumber, int contact) {
         this.fullName = fullName;
         this.passNumber = passNumber;
         this.contact = contact;
+    }
+        public Client() {
     }
 
     public String getFullName() {
@@ -30,25 +33,24 @@ public class Client {
         this.fullName = fullName;
     }
 
-    public String getPassNumber() {
+    public int getPassNumber() {
         return passNumber;
     }
 
-    public void setPassNumber(String passNumber) {
+    public void setPassNumber(int passNumber) {
         this.passNumber = passNumber;
     }
 
-    public String getContact() {
+    public int getContact() {
         return contact;
     }
 
-    public void setContact(String contact) {
+    public void setContact(int contact) {
         this.contact = contact;
     }
 
     public boolean bookASeat(String fn) {
-        try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()) {
+        try (Statement stmt = con.createStatement()) {
             String createTable = "INSERT INTO Clients (fullName, passNumber, contact) "
                     + "VALUES (" + passNumber + ", '" + fullName + "',' "
                     + contact + "');";
@@ -70,11 +72,10 @@ public class Client {
         List<Flight> flightList = new ArrayList<>();
         Flight flightDest;
 
-        try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()) {
+        try (Statement stmt = con.createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT * FROM Flights");
             while (rs.next()) {
-                String destination = rs.getString("destination");
+                String destination = rs.getString("dest");
                 String flightN = rs.getString("flightN");
                 String name = rs.getString("name");
                 String origin = rs.getString("origin");
@@ -99,12 +100,11 @@ public class Client {
         List<Flight> flightList = new ArrayList<>();
         Flight flightdur;
 
-        try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()) {
+        try (Statement stmt = con.createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT * FROM FLIGHTS");
 
             while (rs.next()) {
-                String destination = rs.getString("destination");
+                String destination = rs.getString("dest");
                 String flightN = rs.getString("flightN");
                 String name = rs.getString("name");
                 String origin = rs.getString("origin");
@@ -128,11 +128,10 @@ public class Client {
         List<Flight> originList = new ArrayList<>();
         Flight flightList = null;
 
-        try (Connection con = DBConnection.DbConnector();
-                Statement stmt = con.createStatement()) {
+        try (Statement stmt = con.createStatement()) {
             ResultSet rs = stmt.executeQuery("SELECT * FROM Flights");
             while (rs.next()) {
-                String destination = rs.getString("destination");
+                String destination = rs.getString("dest");
                 String flightN = rs.getString("flightN");
                 String name = rs.getString("name");
                 String origin = rs.getString("origin");
