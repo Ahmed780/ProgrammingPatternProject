@@ -1,8 +1,8 @@
-package progproject;
+package Progproject;
 
-import java.sql.Connection;
-import java.sql.Statement;
 import java.util.*;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  *
@@ -10,37 +10,61 @@ import java.util.*;
  */
 public class UseFlight {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
 
         List<Flight> model = retrieveData();
         FlightView view = new FlightView();
         FlightController controller = new FlightController(model, view);
-         Flight flight = new Flight();
-        
-         List<Client> clientModel = retrieveClientData();
+        Flight flight = new Flight();
+
+        List<Client> clientModel = retrieveClientData();
         ClientView clientView = new ClientView();
         ClientController clientController = new ClientController(clientModel, clientView);
         Client client = new Client();
-        
-        String fligtTable = "CREATE TABLE Flights "
-                + "(flightN TEXT PRIMARY KEY NOT NULL,"
-                + " name                TEXT  NOT NULL, "
-                + "origin              TEXT NOT NULL, "
-                + "dest                TEXT NOT NULL, "
-                + " duration            INT  NOT NULL, "
-                + " seats               INT   NOT NULL, "
-                + " available           INT NOT NULL, "
-                + " amount              INT  NOT NULL)";   
-                
-    String clientTable = "CREATE TABLE Clients "
-            + " (FLname                TEXT NOT NULL,"
-            + "Passnum int PRIMARY KEY     NOT NULL,"
-            + " Contact   INT NOT NULL)";
 
-        String reservedTable = "CREATE TABLE reservedFLIGHTS "
+        Locale locale1 = new Locale("en", "CA");
+        Locale locale2 = new Locale("fr", "CA");
+        Scanner sc = new Scanner(System.in);
+        ResourceBundle res = ResourceBundle.getBundle("Progproject/file_en_GB", locale1);
+        ResourceBundle res2 = ResourceBundle.getBundle("Progproject/file_fr_CA", locale2);
+
+        System.out.println("Choose a Locale from 1 to 2: ");
+        System.out.println("1: Canada, English\n"
+                + "2: Canada, French\n");
+
+        switch (sc.nextInt()) {
+            case 1:
+                System.out.println(res.getString("key1"));
+                System.out.println(res.getString("key2"));
+                System.out.println(res.getString("key3"));
+                 System.out.println("\n"+res.getString("key4"));
+                break;
+            case 2:
+                System.out.println(res2.getString("key1"));
+                System.out.println(res2.getString("key2"));
+                System.out.println(res2.getString("key3"));
+                 System.out.println("\n"+ res2.getString("key4"));
+                break;
+            default:
+                System.out.println("Invalid choice");
+        }
+
+        String fligtTable = "CREATE TABLE Flights "
+                + "(flightN varchar(25) primary key,"
+                + " Name    varchar(25)  NOT NULL, "
+                + "Origin   varchar(25) NOT NULL, "
+                + "Dest     varchar(25) NOT NULL, "
+                + "Duration INT, "
+                + "Seats     INT, "
+                + "Available  INT NOT NULL, "
+                + "Amount    INT)";
+
+        String clientTable = "CREATE TABLE Clients "
+                + " (FLname                TEXT NOT NULL,"
+                + "Passnum int PRIMARY KEY     NOT NULL,"
+                + " Contact   INT NOT NULL)";
+
+        String reservedTable = "CREATE TABLE reservedFlights "
                 + "(TicketN INT PRIMARY KEY       NOT NULL,"
                 + " FlightN                  TEXT NOT NULL,"
                 + " PassNum                   INT NOT NULL,"
@@ -52,15 +76,11 @@ public class UseFlight {
                 + " REFERENCES FLIGHTS(FLIGHTN),"
                 + " CONSTRAINT FK_RESERVE_PASSNUM FOREIGN KEY(PassNum)"
                 + " REFERENCES CLIENTS(PASSNUM))";
-        
-        controller.createFlightsTable(fligtTable );
-        System.out.println("TABLE FLIGHTS CREATED");
+ 
+        controller.createFlightsTable(fligtTable);
         clientController.createClientsTable(clientTable);
-        System.out.println("TABLE CLIENTS CREATED");
         controller.createReservedFlightsTable(reservedTable);
-        System.out.println("TABLE RESERVEDFLIGHTS CREATED");
-        
-        System.out.println("\nView Board");
+
         model.forEach((fl) -> {
             flight.addFlight(fl);
         });
@@ -69,32 +89,31 @@ public class UseFlight {
     }
 
     /**
-     *this method retrieves from flight table
-     * @return ArrayList 
+     * This method retrieves data from flight table
+     *
+     * @return ArrayList
      */
-
     public static List<Flight> retrieveData() {
         Flight[] flightsList = {
-            new Flight("1001", "Boeing 737 Max", "Montreal", "Amsterdam", 555, 204, 1115),
-            new Flight("1002", "Boeing 737", "Toronto", "London", 405, 130, 635),
-            new Flight("1003", "Boeing 787 Breamliner", "Montreal", "Doha", 725, 248, 3093),
-            new Flight("1004", "Boeing 800", "Toronto", "Guyana", 1200, 168, 721)};
+            new Flight("2490", "Boeing 747-400", "Montreal", "Pakistan", 1000, 200, 1115),
+            new Flight("2491", "Boeing 777-300", "Toronto", "Morocco", 800, 250, 635),
+            new Flight("2492", "Airbus A340-600", "Ottawa", "Turkey", 750, 150, 3093),
+            new Flight("2493", "Airbus A350-900", "Ontario", "Qatar", 500, 100, 721)};
 
         return new ArrayList(Arrays.asList(flightsList));
     }
 
-     /**
-     *this method retrieves from client table 
-     * @return ArrayList 
+    /**
+     * this method retrieves from client table
+     *
+     * @return ArrayList
      */
-     
-        public static List<Client> retrieveClientData() {
+    public static List<Client> retrieveClientData() {
         Client[] clientList = {
-            new Client("Uzair Lakhani",5001, 786),
-            new Client("Muhmmad Val",5002, 455),
-            new Client("Uraib Lakhani",5003, 999),
-            new Client("Rafey Lakhani",5004, 555)};
-
-        return new ArrayList(Arrays.asList(clientList));
-    }       
+            new Client("Uzair Lakhani", 54325, 514-555-5465),
+            new Client("Muhmmad Val", 54636, 514-555-67565),
+            new Client("Uraib Lakhani", 34555, 438-555-0157),
+            new Client("Rafey Lakhani", 53456, 613-555-0154)};
+         return new ArrayList(Arrays.asList(clientList));
+    }
 }
