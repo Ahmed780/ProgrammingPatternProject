@@ -33,6 +33,28 @@ public class Flight {
 
     public Flight() {
     }
+    
+    public boolean issueTicket() {
+		
+	}
+	
+	public boolean cancelFlight(int ticket, int passN) {
+		
+		try (
+			Connection con = DBConnection.DbConnector(); 
+			Statement stmt = con.createStatement()) {
+				String createTable = "DELETE FROM reservedFlights "
+						+ "WHERE TICKETN = '" + ticket + "' AND"
+						+ "PassNum = '"+passN+"';";
+			stmt.execute(createTable);
+			return true;
+			}
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			return false;
+			System.exit(0);
+		}
+	}
 
     public boolean addFlight(Flight flight) {
         try (Statement stmt = con.createStatement()) {
