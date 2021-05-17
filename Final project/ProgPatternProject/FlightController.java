@@ -5,7 +5,7 @@ import java.util.*;
 
 /**
  *
- * @author Uzair Lakhani, Muhammad Val
+ * @author Uzair Lakhani, Mohamed Mohamed Vall
  */
 public class FlightController {
     
@@ -18,6 +18,10 @@ public class FlightController {
         this.view = view;
     }
     
+    /**
+     * Executes the statement inserted as a parameter
+     * @param createTable, command to be executed
+     */
     public void createFlightsTable(String createTable) {
         try (Statement stmt = con.createStatement()){
           stmt.executeUpdate("DROP TABLE IF EXISTS Flights;");
@@ -27,6 +31,11 @@ public class FlightController {
             System.exit(0);
         }
     } 
+    
+    /**
+     * Executes the statement inserted as a parameter
+     * @param createTable, command to be executed
+     */
     public void createReservedFlightsTable(String sqlStatement) {
         try (Statement stmt = con.createStatement()) {
             stmt.executeUpdate("DROP TABLE IF EXISTS reservedFlights;");
