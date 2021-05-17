@@ -21,13 +21,14 @@ public class Flight {
     public static int ticketN;
     private static Connection con = DBConnection.getInstance();
 
-    public Flight(String flightN, String name, String origin, String dest, double duration, int seats, double amount) {
+    public Flight(String flightN, String name, String origin, String dest, double duration, int seats, int available, double amount) {
         this.flightN = flightN;
         this.name = name;
         this.origin = origin;
         this.dest = dest;
         this.duration = duration;
         this.seats = seats;
+        this.available = seats;
         this.amount = amount;
     }
 
@@ -40,6 +41,7 @@ public class Flight {
      * @return
      */
     public boolean addFlight(Flight flight) {
+         flight.available = flight.seats;
         try (Statement stmt = con.createStatement()) {
             String createTable = "INSERT INTO Flights (flightN, name, origin, dest, "
                     + "duration, seats, available, amount) " + "VALUES (" + flight.flightN + ", '" + flight.name + "',' "
@@ -184,7 +186,7 @@ public class Flight {
                 String flightNF = rs.getString("flightN");
                 int amountF = rs.getInt("Amount");
                 int availableSeats = rs.getInt("Available");                
-                if (availableSeats > 0) {
+                if (availableSeats == 0) {
                     ticketN++;
                     try (Statement stmt2 = con.createStatement()) {
                         String createTable = "INSERT INTO reservedFlights (ticketN, flightN, "+ "PassNum, FLname, IssueDate, Contact, Amount) "
