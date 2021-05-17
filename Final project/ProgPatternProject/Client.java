@@ -8,7 +8,7 @@ import java.util.*;
 
 /**
  *
- * @author Uzair Lakhani, Muhammad Val
+ * @author Uzair Lakhani, Mohamed Mohamed Vall
  */
 public class Client {
 
@@ -17,7 +17,7 @@ public class Client {
     protected long contact;
     private static Connection con = DBConnection.getInstance();
     Flight flight = new Flight();
-
+    
     public Client(String fullName, int passNumber, long contact) {
         this.fullName = fullName;
         this.passNumber = passNumber;
@@ -48,9 +48,9 @@ public class Client {
     }
 
     /**
-     *
-     * @param ticket
-     * @return
+     *Uses sql command to go through the table and delete the entry with the matching ticket
+     * @param ticket, the number of the ticket to be deleted
+     * @return True if the table was updated, false if it wasn't
      */
     public boolean cancelResservation(int ticket) {
 
@@ -66,9 +66,11 @@ public class Client {
     }
 
     /**
-     *
-     * @param dest
-     * @return
+     *Goes through the Flights table, saving each row's data and, through the destination 
+     *attribute, seeing if they match with the destination inserted in the parameter. Every
+     *matching flight is saved in a list
+     * @param dest, the destination the flights should match
+     * @return List of  flights with the same destination
      */
     public List<Flight> searchFlightByDest(String dest) {
         List<Flight> flightList = new ArrayList<>();
@@ -99,9 +101,11 @@ public class Client {
     }
 
     /**
-     *
-     * @param d
-     * @return
+     *Goes through the Flights table, saving each row's data and, through the duration 
+     *attribute, seeing if they match with the destination inserted in the parameter. Every
+     *matching flight is saved in a list
+     * @param d, the duration the flights should match
+     * @return List of  flights with the same duration
      */
     public List<Flight> searchFlightByDuration(int d) {
         List<Flight> flightList = new ArrayList<>();
@@ -132,9 +136,11 @@ public class Client {
     }
 
     /**
-     *
-     * @param orig
-     * @return
+     *Goes through the Flights table, saving each row's data and, through the origin 
+     *attribute, seeing if they match with the destination inserted in the parameter. Every
+     *matching flight is saved in a list
+     * @param dest, the origin the flights should match
+     * @return List of  flights with the same origin
      */
     public List<Flight> searchFlighByOrigin(String orig) {
         List<Flight> originList = new ArrayList<>();
@@ -166,8 +172,9 @@ public class Client {
     }
 
     /**
-     *
-     * @return
+     * Uses a sql command to receive every entry of the clients table. Through a while loop,
+     * every entry is saved in a list.
+     * @return List of all the clients
      */
     public static Map<String, String> viewBoard() {
         Map<String, String> map = new HashMap();
@@ -188,8 +195,9 @@ public class Client {
     }
 
     /**
-     *
-     * @return
+     * Uses a sql command to receive every entry of the Flights table. Through a while loop,
+     * every entry is saved in a list.
+     * @return List of all the flights
      */
     public Map<String, String> viewFlightsBoard() {
         Map<String, String> map = new HashMap();
