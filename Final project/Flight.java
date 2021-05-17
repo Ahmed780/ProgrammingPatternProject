@@ -1,13 +1,12 @@
-package Progproject;
+package ProgPatternProject;
 
 import java.sql.*;
-import java.sql.Date;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
  *
- * @author Uzair Lakhani, Mohamed Mohamed Vall
+ * @author Uzair Lakhani, Muhammad Val
  */
 public class Flight {
 
@@ -17,11 +16,12 @@ public class Flight {
     private String dest;
     private double duration;
     private int seats;
-    private boolean available;
+    private int available;
     private double amount;
+    public static int ticketN;
     private static Connection con = DBConnection.getInstance();
 
-    public Flight(String flightN, String name, String origin, String dest, double duration, int seats, double amount) {
+    public Flight(String flightN, String name, String origin, String dest, double duration, int seats, int available, double amount) {
         this.flightN = flightN;
         this.name = name;
         this.origin = origin;
@@ -33,29 +33,12 @@ public class Flight {
 
     public Flight() {
     }
-    
-    public boolean issueTicket() {
-		
-	}
-	
-	public boolean cancelFlight(int ticket, int passN) {
-		
-		try (
-			Connection con = DBConnection.DbConnector(); 
-			Statement stmt = con.createStatement()) {
-				String createTable = "DELETE FROM reservedFlights "
-						+ "WHERE TICKETN = '" + ticket + "' AND"
-						+ "PassNum = '"+passN+"';";
-			stmt.execute(createTable);
-			return true;
-			}
-		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			return false;
-			System.exit(0);
-		}
-	}
 
+    /**
+     *
+     * @param flight
+     * @return
+     */
     public boolean addFlight(Flight flight) {
         try (Statement stmt = con.createStatement()) {
             String createTable = "INSERT INTO Flights (flightN, name, origin, dest, "
@@ -72,7 +55,12 @@ public class Flight {
         return false;
     }
 
-    public boolean removerFlight(String flightN) {
+    /**
+     *
+     * @param flightN
+     * @return
+     */
+    public boolean removeFlight(String flightN) {
         try (Statement stmt = con.createStatement()) {
             String createTable = "delete from Flights where flightN =" + flightN + ";";
             stmt.execute(createTable);
@@ -85,6 +73,49 @@ public class Flight {
         return false;
     }
 
+    /**
+     *
+     * @param flightN
+     * @param field
+     * @param newValue
+     * @return
+     */
+    public boolean updateFlightData(String flightN, String field, String newValue) {
+        try (Statement stmt = con.createStatement()) {
+            String createTable = "UPDATE Flights SET " + field + "= " + "'" + newValue + "'"
+                    + " where flightN = " + flightN + ";";
+            stmt.execute(createTable);
+            return true;
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        return false;
+    }
+    
+    /**
+     *
+     * @param ticket
+     * @param passN
+     * @return
+     */
+    public boolean cancelFlight(int ticket, int passN) {
+        try (Statement stmt = con.createStatement()) {
+           String createTable = "DELETE FROM reservedFlights WHERE ticketN= '" + ticket +
+                    "' AND PassNum= '" + passN + "';";
+            stmt.execute(createTable);
+            return true;
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            System.exit(0);
+        }
+        return false;
+    }
+     
+    /**
+     *
+     * @return
+     */
     public static Map<String, String> viewBoard() {
         Map<String, String> map = new HashMap();
 
@@ -111,43 +142,71 @@ public class Flight {
         }
         return map;
     }
-
-    public boolean updateFlightData(String flightN, String field, String newValue) {
-        try (Statement stmt = con.createStatement()) {
-            String sql = "UPDATE Flights SET " + field + "= " + "'" + newValue + "'"
-                    + " where flightN = " + flightN + ";";
-            stmt.execute(sql);
-            return true;
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            System.exit(0);
-        }
-        return false;
-    }
+     
+    /**
+     *
+     * @return
+     */
     public static Map<String, String> viewBookedFlights() {
         Map<String, String> map = new HashMap();
 
         try (Statement stmt = con.createStatement()) {
-            ResultSet rs = stmt.executeQuery("SELECT * FROM RESERVEDFLIGHTS;");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM reservedFlights;");
 
             while (rs.next()) {
-                String flightN = rs.getString("FLIGHTN");
-                String passNum = rs.getString("PASSNUM");
-                String flName = rs.getString("FLNAME");
-                int issueDate = rs.getInt("ISSUEDATE");
-                int contact = rs.getInt("CONTACT");
-                int amount = rs.getInt("AMOUNT");
-
-                map.put(rs.getString("TICKETN"), " FLIGHTN: " + flightN
-                        + ", PASSNUM: " + passNum + ", FLNAME: " + flName
-                        + ", ISSUEDATE: " + issueDate + ", CONTACT: " + contact
-                        + ", AMOUNT: " + amount + "\n");
+                String flightN = rs.getString("flightN");
+                String passNum = rs.getString("PassNum");
+                String flName = rs.getString("FLname");
+                int issueDate = rs.getInt("IssueDate");
+                int contact = rs.getInt("Contact");
+                int amount = rs.getInt("Amount");
+                map.put(rs.getString("ticketN"), " flightN: " + flightN + ", PassNum: " + passNum + ", FLname: " + flName + ", IssueDate: " + issueDate + ", Contact: " + contact
+                + ", Amount: " + amount + "\n");
             }
         } catch (Exception e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
         return map;
+    }
+    
+    /**
+     *
+     * @param c
+     * @param flight
+     * @return
+     */
+    
+    public boolean issueTicket(Client c, String flight) {       
+        try (Statement stmt = con.createStatement()) {           
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Flights " + "WHERE flightN= " + flight + ";");
+            while (rs.next()) {
+                String flightNF = rs.getString("flightN");
+                int amountF = rs.getInt("Amount");
+                int availableSeats = rs.getInt("Available");                
+                if (availableSeats == 0) {
+                    ticketN++;
+                    try (Statement stmt2 = con.createStatement()) {
+                        String createTable = "INSERT INTO reservedFlights (ticketN, flightN, "+ "PassNum, FLname, IssueDate, Contact, Amount) "
+                                + "VALUES ('" + ticketN + "', '" +  flightNF + "', '"
+                                + c.getPassNumber() + "', '" + c.getFullName() + "', '"
+                                + (LocalDateTime.now()) + "', '" 
+                                + c.getContact() + "', '" + amountF + "');";
+                        stmt2.execute(createTable);
+                        return true;
+                    } catch (Exception e) {
+                        System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                        System.exit(0);
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
+                System.exit(0);
+         }
+
+        return false;
     }
 
     public String getFlightN() {
@@ -198,11 +257,11 @@ public class Flight {
         this.seats = seats;
     }
 
-    public boolean isAvailable() {
+    public int getAvailable() {
         return available;
     }
 
-    public void setAvailable(boolean available) {
+    public void setAvailable(int available) {
         this.available = available;
     }
 
@@ -214,9 +273,25 @@ public class Flight {
         this.amount = amount;
     }
 
+    public static int getTicketN() {
+        return ticketN;
+    }
+
+    public static void setTicketN(int ticketN) {
+        Flight.ticketN = ticketN;
+    }
+
+    public static Connection getCon() {
+        return con;
+    }
+
+    public static void setCon(Connection con) {
+        Flight.con = con;
+    }
+
     @Override
     public String toString() {
         return "Flight{" + "flightN=" + flightN + ", name=" + name + ", origin=" + origin + ", dest=" + dest + ", duration=" + duration + ", seats=" + seats + ", available=" + available + ", amount=" + amount + '}';
     }
-
+       
 }
