@@ -18,8 +18,8 @@ public class ClientController {
     }
  
     /**
-     *
-     * @param createTable
+     * A template that will execute the sql command inserted as a parameter
+     * @param createTable A string of the sql command to be executed
      */
     public void createClientsTable(String createTable) {
         try (Statement stmt = con.createStatement()) {
@@ -31,9 +31,9 @@ public class ClientController {
         }
     }
     /**
-     *
-     * @param client
-     * @return
+     * Inserts a Client object inside the Clients table
+     * @param client Client to be added to the table
+     * 
      */
     public void addClient(Client client) {
         try (Statement stmt = con.createStatement()) {
