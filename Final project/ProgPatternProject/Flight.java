@@ -186,7 +186,7 @@ public class Flight {
                 String flightNF = rs.getString("flightN");
                 int amountF = rs.getInt("Amount");
                 int availableSeats = rs.getInt("Available");                
-                if (availableSeats == 0) {
+                if (availableSeats > 0) {
                     ticketN++;
                     try (Statement stmt2 = con.createStatement()) {
                         String createTable = "INSERT INTO reservedFlights (ticketN, flightN, "+ "PassNum, FLname, IssueDate, Contact, Amount) "
