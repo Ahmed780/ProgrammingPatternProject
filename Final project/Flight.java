@@ -28,6 +28,7 @@ public class Flight {
         this.dest = dest;
         this.duration = duration;
         this.seats = seats;
+        this.available = seats;
         this.amount = amount;
     }
 
