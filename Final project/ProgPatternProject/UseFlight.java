@@ -65,28 +65,45 @@ public class UseFlight {
 
         switch (sc.nextInt()) {
             case 1:
-                 System.out.println(res.getString("key1"));
-                controller.createFlightsTable(fligtTable);              
-                model.forEach((fl) -> {
-                    flight.addFlight(fl);
-                });
+                System.out.println(res.getString("key1"));
+                controller.createFlightsTable(fligtTable);
+                controller.createReservedFlightsTable(reservedTable);
+                   for (Flight fl : model) {
+                     flight.addFlight(fl);
+                 }
                 controller.updateView(Flight.viewBoard());
-                
+
                 //Remove flight
                 System.out.println(res.getString("key5"));
                 flight.removeFlight("2490");
                 controller.updateView(Flight.viewBoard());
-                
+
                 //Update flight
                 System.out.println(res.getString("key6"));
                 flight.updateFlightData("2491", "origin", "Montreal");
+                                
                 controller.updateView(Flight.viewBoard());
-  
-                controller.updateView(Flight.viewBookedFlights());
-                controller.createReservedFlightsTable(reservedTable);
-                break;
                 
-                case 2:
+                //Issue tickets
+                System.out.println("\n" + res.getString("key9"));
+                
+                clientModel.forEach((cl) -> {
+                    if (cl.getPassNumber() == 34555) {
+                        flight.issueTicket(cl, "2491");
+                    }
+                });
+                controller.updateView(Flight.viewBookedFlights());
+
+                clientModel.forEach((cl) -> {
+                    if (cl.getPassNumber() == 53456) {
+                        flight.issueTicket(cl, "2491");
+                    }
+                });
+                controller.updateView(Flight.viewBookedFlights());
+
+                break;
+
+            case 2:
                 controller.createFlightsTable(fligtTable);
                 System.out.println(res.getString("key1"));
                 System.out.println(res.getString("key2"));
@@ -144,6 +161,18 @@ public class UseFlight {
                         -> {
                     System.out.println(ori.toString());
                 });
+                
+                //Book a flight
+                System.out.println("\nBooking a flight");
+                clientModel.forEach((cl) -> {
+                    if (cl.getPassNumber() == 34555) {
+                        if (client.bookASeat("2493") == true) {
+                            flight.issueTicket(cl, "2493");
+                        }
+                    }
+                });
+                
+                controller.updateView(Flight.viewBookedFlights());
                 break;
                 
                 case 4:
@@ -154,7 +183,7 @@ public class UseFlight {
                  }
                 clientController.updateView(Client.viewBoard());
 
-               // controller.updateView(Flight.viewBookedFlights());
+               controller.updateView(Flight.viewBookedFlights());
 
                 //Cancel flight
                 System.out.println("\nCancel flight");
@@ -192,10 +221,10 @@ public class UseFlight {
      */
     public static List<Flight> retrieveData() {
         Flight[] flightsList = {
-            new Flight("2490", "Boeing 747-400", "Montreal", "Pakistan", 1000, 200, 1115),
-            new Flight("2491", "Boeing 777-300", "Toronto", "Morocco", 800, 250, 635),
-            new Flight("2492", "Airbus A340-600", "Ottawa", "Turkey", 750, 150, 3093),
-            new Flight("2493", "Airbus A350-900", "Ontario", "Qatar", 500, 100, 721)};
+            new Flight("2490", "Boeing 747-400", "Montreal", "Pakistan", 1000, 50, 200, 1115),
+            new Flight("2491", "Boeing 777-300", "Toronto", "Morocco", 800, 250,150, 635),
+            new Flight("2492", "Airbus A340-600", "Ottawa", "Turkey", 750, 150, 100, 3093),
+            new Flight("2493", "Airbus A350-900", "Ontario", "Qatar", 500, 100, 20, 721)};
 
         return new ArrayList(Arrays.asList(flightsList));
     }
