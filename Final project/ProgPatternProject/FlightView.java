@@ -4,7 +4,7 @@ import java.util.Map;
 
 /**
  *
- * @author Uzair Lakhani, Muhammad Val
+ * @author Uzair Lakhani, Mohamed Mohamed Vall
  */
 public class FlightView {
     public static void printFlightDetails(Map map) {
